@@ -1,0 +1,73 @@
+/* Front page hero: "Skyline". An abstract skyline drawn as a bar chart, with the brook running
+   over the rooftops. Draws once, then holds still. Only loaded by the front page. */
+
+.hv .label { padding-top: 0; margin-bottom: 1.5rem; }
+.hv .hv-inner { position: relative; z-index: 1; width: 100%; }
+.hv .hv-text { max-width: 37rem; }
+.hv h1 { max-width: 19ch; }
+
+.hv-skyline {
+  min-height: clamp(36rem, calc(100svh - var(--header-h)), 52rem);
+  padding-top: clamp(4rem, 9vw, 8rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.hv-sky {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(60%, 56rem);
+  height: auto;
+  color: var(--accent);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28%);
+  mask-image: linear-gradient(to right, transparent 0, #000 28%);
+}
+
+.hv-sky path, .hv-sky circle { fill: none; }
+.hv-sky .grid { stroke-width: 1; }
+.hv-sky #hvGrid stop { stop-color: var(--line); }
+.hv-sky .bld { stroke: var(--ink); stroke-width: 1.25; opacity: 0.85; }
+.hv-sky .floors { stroke: var(--ink); stroke-width: 0.75; opacity: 0.14; }
+.hv-sky .dline { stroke: url(#hvLine); stroke-width: 1.75; stroke-linecap: round; }
+.hv-sky .pt-m { display: none; }
+.hv-sky .pt { fill: var(--bg); stroke: currentColor; stroke-width: 1.5; }
+
+@media (max-width: 56.1875rem) {
+  .hv-skyline { min-height: 0; padding-bottom: 0; }
+  .hv-sky {
+    position: relative;
+    width: 100%;
+    margin-top: 2.5rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .hv-sky .bld { stroke-width: 2; }
+  .hv-sky .floors { stroke-width: 1.2; }
+  .hv-sky .dline { stroke: url(#hvLineM); stroke-width: 2.6; }
+  .hv-sky .pt-m { display: inline; }
+  .hv-sky .pt { stroke-width: 2.2; }
+}
+
+/* ---------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the skyline draws once, left to right, then the brook runs over the roofs */
+  .hv-sky .grid { animation: hvFade 900ms var(--ease-out) both; }
+  .hv-sky .bld { stroke-dasharray: 1; animation: hvDraw 1000ms var(--ease-out) var(--d) both; }
+  .hv-sky .floors { animation: hvFade 500ms var(--ease-out) var(--d) both; }
+  .hv-sky .dline { stroke-dasharray: 1; animation: hvDraw 1500ms var(--ease-in-out) 1000ms both; }
+  .hv-sky .pt {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hvPop 300ms var(--ease-out) var(--d) both;
+  }
+}
+
+/* reduced motion: the finished drawing, with a short fade instead of the draw */
+@media (prefers-reduced-motion: reduce) {
+  .hv-sky { animation: fade 0.2s ease both; }
+}
+
+@keyframes hvDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes hvFade { from { opacity: 0; } }
+@keyframes hvPop { from { opacity: 0; transform: scale(0.95); } }
